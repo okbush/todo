@@ -4,48 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do List</title>
-    
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/app.js" defer></script>
-    
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: auto;
-            text-align: center;
-        }
-        input, button {
-            margin: 5px;
-            padding: 8px;
-            width: 90%;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        li {
-            display: flex;
-            justify-content: space-between;
-            background: #f4f4f4;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-        }
-        button {
-            cursor: pointer;
-        }
-        .completed {
-            text-decoration: line-through;
-            color: gray;
-        }
-    </style>
 </head>
 <body>
 
     <h2>To-Do List</h2>
 
-    <!-- Authentication Section -->
     <div id="auth">
         <h3>Sign Up / Sign In</h3>
         <input type="text" id="username" placeholder="Username">
@@ -55,10 +20,10 @@
         <p id="auth-message"></p>
     </div>
 
-    <!-- To-Do List Section -->
     <div id="todo-section" style="display:none;">
         <h3>Your Tasks</h3>
-        <input type="text" id="task" placeholder="New Task">
+        <input type="text" id="task" placeholder="Task Title">
+        <textarea id="description" placeholder="Task Description"></textarea>
         <button onclick="addTask()">Add Task</button>
         <ul id="task-list"></ul>
         <button onclick="logout()">Log Out</button>

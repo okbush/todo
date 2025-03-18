@@ -8,16 +8,7 @@ function signup() {
             username: document.getElementById("username").value,
             password: document.getElementById("password").value
         })
-    })
-    .then(res => res.json())
-    .then(data => {
-        alert(data.message);
-        if (data.message === "User registered successfully") {
-            document.getElementById("username").value = "";
-            document.getElementById("password").value = "";
-        }
-    })
-    .catch(error => console.error("Signup Error:", error));
+    }).then(res => res.json()).then(console.log);
 }
 
 function signin() {
@@ -28,102 +19,83 @@ function signin() {
             username: document.getElementById("username").value,
             password: document.getElementById("password").value
         })
-    })
-    .then(res => res.json())
-    .then(data => {
+    }).then(res => res.json()).then(data => {
         if (data.user_id) {
             userId = data.user_id;
             document.getElementById("auth").style.display = "none";
             document.getElementById("todo-section").style.display = "block";
             fetchTasks();
         } else {
-            alert("Invalid username or password");
+            document.getElementById("auth-message").innerText = "Invalid credentials";
         }
-    })
-    .catch(error => console.error("Signin Error:", error));
+    });
 }
 
 function addTask() {
-    if (!userId) {
-        alert("You must be signed in to add tasks.");
+    const taskTitle = document.getElementById("task").value;
+    const taskDescription = document.getElementById("description").value;
+
+    if (!taskTitle || !taskDescription) {
+        alert("Please fill in both fields!");
         return;
     }
 
     fetch("http://localhost/todo_app/backend/api/tasks.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: userId, task: document.getElementById("task").value })
-    })
-    .then(res => res.json())
-    .then(data => {
-        alert(data.message);
+        body: JSON.stringify({ user_id: userId, task: taskTitle, description: taskDescription })
+    }).then(res => res.json()).then(() => {
         document.getElementById("task").value = "";
+        document.getElementById("description").value = "";
         fetchTasks();
-    })
-    .catch(error => console.error("Error adding task:", error));
+    });
 }
 
 function fetchTasks() {
-    if (!userId) {
-        console.error("User ID is missing, cannot fetch tasks.");
-        return;
-    }
-
     fetch(`http://localhost/todo_app/backend/api/tasks.php?user_id=${userId}`)
     .then(res => res.json())
     .then(data => {
-        let taskList = document.getElementById("task-list");
+        const taskList = document.getElementById("task-list");
         taskList.innerHTML = "";
 
-        if (data.error) {
-            console.error("Fetch error:", data.error);
-            return;
-        }
-
         data.forEach(task => {
-            let listItem = document.createElement("li");
-            listItem.innerText = `${task.task} - ${task.status}`;
-            
-            // Create a button to mark as completed
-            let completeBtn = document.createElement("button");
-            completeBtn.innerText = "✔";
-            completeBtn.onclick = () => updateTaskStatus(task.id, "completed");
-
-            // Create a button to delete task
-            let deleteBtn = document.createElement("button");
-            deleteBtn.innerText = "❌";
-            deleteBtn.onclick = () => deleteTask(task.id);
-
-            listItem.appendChild(completeBtn);
-            listItem.appendChild(deleteBtn);
-            taskList.appendChild(listItem);
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <div>
+                    <strong>${task.task}</strong> <br>
+                    <small>${task.description}</small> <br>
+                    <span>Status: <b>${task.status}</b></span>
+                </div>
+                <button onclick="toggleTaskStatus(${task.id}, '${task.status}')">
+                    ${task.status === "done" ? "Undo" : "Mark as Done"}
+                </button>
+                <button onclick="deleteTask(${task.id})">❌</button>
+            `;
+            taskList.appendChild(li);
         });
     })
     .catch(error => console.error("Error fetching tasks:", error));
 }
 
-function updateTaskStatus(taskId, status) {
-    fetch("http://localhost/todo_app/backend/api/tasks.php", {
+function toggleTaskStatus(taskId, currentStatus) {
+    const newStatus = currentStatus === "done" ? "pending" : "done";
+
+    fetch(`http://localhost/todo_app/backend/api/tasks.php`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: taskId, status })
-    })
-    .then(res => res.json())
-    .then(data => {
-        alert(data.message);
-        fetchTasks();
-    })
-    .catch(error => console.error("Error updating task:", error));
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id=${taskId}&status=${newStatus}`
+    }).then(() => fetchTasks());
 }
 
 function deleteTask(taskId) {
     fetch(`http://localhost/todo_app/backend/api/tasks.php?id=${taskId}`, {
         method: "DELETE"
-    })
-    .then(res => res.json())
-    .then(data => {
-        alert(data.message);
-        fetchTasks();
-    })
-    .catch(error => console.error("Error deleting task:", error));
+    }).then(fetchTasks);
+}
+
+function logout() {
+    userId = null;
+    document.getElementById("auth").style.display = "block";
+    document.getElementById("todo-section").style.display = "none";
+    document.getElementById("auth-message").innerText = "You have logged out.";
 }
