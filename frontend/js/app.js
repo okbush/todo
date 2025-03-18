@@ -25,30 +25,20 @@ function signin() {
             document.getElementById("auth").style.display = "none";
             document.getElementById("todo-section").style.display = "block";
             fetchTasks();
-        } else {
-            document.getElementById("auth-message").innerText = "Invalid credentials";
         }
     });
 }
 
 function addTask() {
-    const taskTitle = document.getElementById("task").value;
-    const taskDescription = document.getElementById("description").value;
-
-    if (!taskTitle || !taskDescription) {
-        alert("Please fill in both fields!");
-        return;
-    }
-
     fetch("http://localhost/todo_app/backend/api/tasks.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: userId, task: taskTitle, description: taskDescription })
-    }).then(res => res.json()).then(() => {
-        document.getElementById("task").value = "";
-        document.getElementById("description").value = "";
-        fetchTasks();
-    });
+        body: JSON.stringify({ 
+            user_id: userId, 
+            task: document.getElementById("task").value,
+            description: document.getElementById("description").value
+        })
+    }).then(fetchTasks);
 }
 
 function fetchTasks() {
@@ -57,19 +47,19 @@ function fetchTasks() {
     .then(data => {
         const taskList = document.getElementById("task-list");
         taskList.innerHTML = "";
-
         data.forEach(task => {
             const li = document.createElement("li");
+            li.classList.add("task-item");
             li.innerHTML = `
-                <div>
-                    <strong>${task.task}</strong> <br>
-                    <small>${task.description}</small> <br>
-                    <span>Status: <b>${task.status}</b></span>
+                <div class="task-details">
+                    <div class="task-title">${task.task}</div>
+                    <div class="task-description">${task.description}</div>
+                    <div class="task-status">Status: ${task.status}</div>
                 </div>
-                <button onclick="toggleTaskStatus(${task.id}, '${task.status}')">
-                    ${task.status === "done" ? "Undo" : "Mark as Done"}
-                </button>
-                <button onclick="deleteTask(${task.id})">❌</button>
+                <div class="task-actions">
+                    <button class="btn-complete" onclick="updateTaskStatus(${task.id}, 'completed')">Done</button>
+                    <button class="btn-delete" onclick="deleteTask(${task.id})">Delete</button>
+                </div>
             `;
             taskList.appendChild(li);
         });
@@ -77,25 +67,16 @@ function fetchTasks() {
     .catch(error => console.error("Error fetching tasks:", error));
 }
 
-function toggleTaskStatus(taskId, currentStatus) {
-    const newStatus = currentStatus === "done" ? "pending" : "done";
-
+function updateTaskStatus(taskId, status) {
     fetch(`http://localhost/todo_app/backend/api/tasks.php`, {
         method: "PUT",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `id=${taskId}&status=${newStatus}`
-    }).then(() => fetchTasks());
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: taskId, status })
+    }).then(fetchTasks);
 }
 
 function deleteTask(taskId) {
     fetch(`http://localhost/todo_app/backend/api/tasks.php?id=${taskId}`, {
         method: "DELETE"
     }).then(fetchTasks);
-}
-
-function logout() {
-    userId = null;
-    document.getElementById("auth").style.display = "block";
-    document.getElementById("todo-section").style.display = "none";
-    document.getElementById("auth-message").innerText = "You have logged out.";
 }

@@ -1,0 +1,135 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Card Style */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: 350px;
+    text-align: center;
+}
+
+/* Input Fields */
+.input-group, .task-input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+input, textarea {
+    width: calc(100% - 20px); /* Fix right-side margin issue */
+    padding: 10px;
+    margin: 5px auto; /* Centering */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: block;
+}
+
+textarea {
+    resize: none;
+    height: 60px;
+}
+
+/* Buttons */
+.btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.btn:hover {
+    background: #0056b3;
+}
+
+/* Task List */
+.task-container {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+/* Task Item */
+.task-item {
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    transition: all 0.3s ease-in-out;
+    flex-wrap: wrap;
+}
+
+/* Task Details */
+.task-details {
+    flex: 1;
+    text-align: left;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.task-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.task-description {
+    font-size: 14px;
+    color: #666;
+}
+
+.task-status {
+    font-size: 12px;
+    font-weight: bold;
+    color: #555;
+    margin-top: 5px;
+}
+
+/* Buttons */
+.task-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-complete {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Hover Effects */
+.task-item:hover {
+    transform: scale(1.02);
+}

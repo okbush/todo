@@ -1,33 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do List</title>
-    <link rel="stylesheet" href="css/styles.css">
     <script src="js/app.js" defer></script>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-
-    <h2>To-Do List</h2>
-
-    <div id="auth">
-        <h3>Sign Up / Sign In</h3>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="signup()">Sign Up</button>
-        <button onclick="signin()">Sign In</button>
-        <p id="auth-message"></p>
+    <div id="auth" class="card">
+        <h2>Sign In / Sign Up</h2>
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+        </div>
+        <button onclick="signup()" class="btn">Sign Up</button>
+        <button onclick="signin()" class="btn">Sign In</button>
     </div>
 
-    <div id="todo-section" style="display:none;">
-        <h3>Your Tasks</h3>
-        <input type="text" id="task" placeholder="Task Title">
-        <textarea id="description" placeholder="Task Description"></textarea>
-        <button onclick="addTask()">Add Task</button>
-        <ul id="task-list"></ul>
-        <button onclick="logout()">Log Out</button>
+    <div id="todo-section" class="card" style="display:none;">
+        <h2>To-Do List</h2>
+        <div class="task-input">
+            <input type="text" id="task" placeholder="Task Title">
+            <textarea id="description" placeholder="Task Description"></textarea>
+            <button onclick="addTask()" class="btn">Add Task</button>
+        </div>
+        <ul id="task-list" class="task-container"></ul>
     </div>
-
 </body>
 </html>
