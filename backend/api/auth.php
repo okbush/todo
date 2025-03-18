@@ -5,16 +5,13 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
-// Handle preflight requests for CORS (OPTIONS method)
 if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
     http_response_code(200);
     exit;
 }
 
-// Get request data
 $data = json_decode(file_get_contents("php://input"));
 
-// Check if the 'action' parameter is set
 if (!isset($_GET['action'])) {
     echo json_encode(["error" => "Missing action parameter"]);
     exit;
@@ -32,7 +29,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $username = $data->username;
         $password = password_hash($data->password, PASSWORD_DEFAULT);
 
-        // Check if username already exists
         $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
         $stmt->execute([$username]);
         if ($stmt->fetch()) {
